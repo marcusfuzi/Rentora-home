@@ -80,61 +80,35 @@ Licence URI: http://www.os-templates.com/template-terms
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
 <!-- ################################################################################################ -->
-<div class="wrapper bgded overlay" style="background-image:url('../images/demo/backgrounds/01.png');">
-  <section id="breadcrumb" class="hoc clear"> 
-    <!-- ################################################################################################ -->
-<!--     <ul>
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Lorem</a></li>
-      <li><a href="#">Ipsum</a></li>
-      <li><a href="#">Dolor</a></li>
-    </ul> -->
-    <!-- ################################################################################################ -->
-    <h6 class="heading">Welcome {{ request.user }}</h6>
-    <!-- ################################################################################################ -->
+<div class="wrapper bgded overlay" style="background:#1e3a8a; padding:25px 0;">
+  <section id="breadcrumb" class="hoc clear" style="color:#fff;"> 
+    <h3 class="heading" style="margin:0; font-size:22px; font-weight:700;">Owner Management Dashboard</h3>
+    <p style="margin:4px 0 0 0; opacity:0.9; font-size:13px;">Welcome, <strong>{{ request.user.username }}</strong> &bull; Manage your listed properties and review tenant inquiries</p>
   </section>
 </div>
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
+
 <div class="wrapper row3">
   <main class="hoc container clear"> 
     <!-- main body -->
-    <!-- ################################################################################################ -->
     <div class="sidebar one_quarter first"> 
-      <!-- ################################################################################################ -->
-<!--       <h6>Lorem ipsum dolor</h6> -->
       <nav class="sdb_holder">
         <ul>
-          <li><a href="{% url 'addProperty' %}">Add propery</a></li>
-         <!--  <li><a href="#">View All tenants</a></li>
-          <li><a href="#">Rent to get</a>
-          </li>
-          <li><a href="#"></a>
-            <ul>
-              <li><a href="#">Navigation - Level 2</a></li>
-              <li><a href="#">Navigation - Level 2</a>
-                <ul>
-                  <li><a href="#">Navigation - Level 3</a></li>
-                  <li><a href="#">Navigation - Level 3</a></li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-          <li><a href="#">Navigation - Level 1</a></li>
-        </ul> -->
+          <li><a href="{% url 'addProperty' %}" class="btn" style="background:#2563eb; color:#fff; display:block; text-align:center; padding:10px; font-weight:700; border-radius:6px; text-decoration:none;">+ Add New Property</a></li>
+        </ul>
       </nav>
-      <form action = "#" method = "post" >
-        {% csrf_token %}
-        <p><b>Sort:</b></p>
-        <input type='radio' name='sort' value='1'>By Name <br>
-        <input type='radio' name='sort' value='2'>By Rent due <br><br><br>
-        <input type='submit' class="btn" value='search'><br>
-      </form>
-      <div class="sdb_holder">
-      
+      <div style="background:#fff; border-radius:8px; padding:15px; border:1px solid #e2e8f0; margin-top:15px;">
+        <h6 style="margin:0 0 10px 0; font-size:14px; font-weight:700; color:#1e293b;">Sort Tenants</h6>
+        <form action="#" method="post">
+          {% csrf_token %}
+          <label style="display:block; margin-bottom:6px; font-size:13px; color:#475569;">
+            <input type='radio' name='sort' value='1'> By Tenant Name
+          </label>
+          <label style="display:block; margin-bottom:12px; font-size:13px; color:#475569;">
+            <input type='radio' name='sort' value='2'> By Rent Due
+          </label>
+          <button type='submit' class="btn" style="width:100%; padding:7px; font-size:12px; border-radius:5px; background:#1e293b; color:#fff; font-weight:600;">Apply Sort</button>
+        </form>
       </div>
-      <!-- ################################################################################################ -->
     </div>
     <!-- ################################################################################################ -->
     <!-- ################################################################################################ -->

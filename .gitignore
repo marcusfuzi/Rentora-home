@@ -13,6 +13,8 @@ __pycache__/
 # Word Report Document (Excluded as requested)
 *.docx
 Rentora_Minor_Project_Report.docx
+extracted_logos/
+static_root_rental/
 
 # Scripts & temporary logs
 *.log

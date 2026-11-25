@@ -1,0 +1,3 @@
+@echo off
+echo Opening Rentora in VS Code...
+"%LOCALAPPDATA%\Programs\Microsoft VS Code\Code.exe" "%~dp0"
