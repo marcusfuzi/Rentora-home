@@ -1,0 +1,22 @@
+# Virtual Environment
+.venv/
+env/
+venv/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Word Report Document (Excluded as requested)
+*.docx
+Rentora_Minor_Project_Report.docx
+
+# Scripts & temporary logs
+*.log
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

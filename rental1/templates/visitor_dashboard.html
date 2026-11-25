@@ -1,257 +1,658 @@
 {% load static %}
 <!DOCTYPE html>
-<!--
-Template Name: Dodmond
-Author: <a href="http://www.os-templates.com/">OS Templates</a>
-Author URI: http://www.os-templates.com/
-Licence: Free to use under our free template licence terms
-Licence URI: http://www.os-templates.com/template-terms
--->
-<html lang="">
+<html lang="en">
 <head>
-<title>{{ request.user }}</title>
+<title>Rentora | Browse Verified Rental Properties</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<!-- <link href="../layout/styles/layout.css" rel="stylesheet" type="text/css" media="all"> -->
-<!-- <link href="static/css/layout.css" rel="stylesheet" type="text/css" media="all">
-<link href="static/css/font-awesome.css" rel="stylesheet" type="text/css" media="all">
-<link href="static/css/font-awesome.min.css" rel="stylesheet" type="text/css" media="all">
-<link href="static/css/custom-flexslider.css" rel="stylesheet" type="text/css" media="all">
- -->
 <link href="{% static 'css/layout.css' %}" rel="stylesheet" type="text/css" media="all">
-<link href="{% static 'css/font-awesome.css' %}" rel="stylesheet" type="text/css" media="all">
 <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" media="all">
-<link href="{% static 'css/custom-flexslider.css' %}" rel="stylesheet" type="text/css" media="all">
 
+<style>
+  body {
+    background: #f8fafc;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .filter-panel {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 22px 20px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+    border: 1px solid #e2e8f0;
+  }
+  .filter-group {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .filter-group:last-child {
+    border-bottom: none;
+    margin-bottom: 10px;
+    padding-bottom: 0;
+  }
+  .filter-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e293b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .filter-title i {
+    color: #2563eb;
+  }
+  .filter-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #1e293b;
+    background: #f8fafc;
+    transition: all 0.2s;
+    box-sizing: border-box;
+  }
+  .filter-input:focus {
+    border-color: #2563eb;
+    background: #ffffff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  }
+  .preset-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .btn-preset {
+    padding: 7px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    background: #f1f5f9;
+    color: #334155;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .btn-preset:hover {
+    background: #2563eb;
+    color: #ffffff;
+    border-color: #2563eb;
+  }
+  .bhk-pill-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .bhk-radio {
+    display: none;
+  }
+  .bhk-label {
+    display: block;
+    text-align: center;
+    padding: 7px 4px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .bhk-radio:checked + .bhk-label {
+    background: #2563eb;
+    color: #ffffff;
+    border-color: #2563eb;
+  }
+  .amenity-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 7px;
+    font-size: 13px;
+    color: #334155;
+    cursor: pointer;
+  }
+  .amenity-checkbox-item input {
+    cursor: pointer;
+  }
+  .btn-apply-filters {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(37,99,235,0.25);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .btn-apply-filters:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(37,99,235,0.35);
+  }
+  .btn-reset-filters {
+    width: 100%;
+    margin-top: 8px;
+    padding: 8px;
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    box-sizing: border-box;
+  }
+  .btn-reset-filters:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+  }
+  .prop-card {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .prop-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.1);
+  }
+  .prop-badge-type {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(15, 23, 42, 0.85);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 5px;
+    backdrop-filter: blur(4px);
+  }
+  .prop-badge-price {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .tag-pill {
+    display: inline-block;
+    padding: 2px 7px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 4px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+    background: #e0e7ff;
+    color: #3730a3;
+  }
+  .tag-tenant {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  .tag-furnish {
+    background: #dcfce7;
+    color: #166534;
+  }
+  .tag-parking {
+    background: #f1f5f9;
+    color: #475569;
+  }
+</style>
 </head>
 <body id="top">
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
+
+<!-- Top bar -->
 <div class="wrapper row0">
   <div id="topbar" class="hoc clear"> 
-    <!-- ################################################################################################ -->
     <div class="fl_left">
       <ul>
         <li><i class="fa fa-phone"></i> +91 (0124) 456 7890</li>
-        <li><i class="fa fa-envelope-o"></i>kushagra15049@iiitd.ac.in</li>
+        <li><i class="fa fa-envelope-o"></i> fuzimarcus@gmail.com</li>
       </ul>
     </div>
     <div class="fl_right">
       <ul>
-        <li><a href="{% url 'home' %}"><i class="fa fa-lg fa-home"></i></a></li>
-        <!-- <li><a href="login.html">Login</a></li>
-        <li><a href="register.html">Register as owner</a></li>
-        <li><a href="register.html">Register as visitor</a></li>
- -->
-        <li><a href="{% url 'logout' %}">Logout</a></li>
-
-        <!-- <li><a href="{% url 'login' %}">Login</a></li>
-        <li><a href="{% url 'register' %}">Register as owner</a></li>
-        <li><a href="{% url 'register' %}">Register as visitor</a></li>
- -->
+        <li><a href="{% url 'home' %}"><i class="fa fa-lg fa-home"></i> Home</a></li>
+        <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> Logout ({{ request.user.username }})</a></li>
       </ul>
     </div>
-    <!-- ################################################################################################ -->
   </div>
 </div>
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
+
+<!-- Header -->
 <div class="wrapper row1">
   <header id="header" class="hoc clear"> 
-    <!-- ################################################################################################ -->
     <div id="logo" class="fl_left">
-      <h1><a href="{% url 'home' %}">Rent it Out</a></h1>
-      <p>We provide the best</p>
+      <h1><a href="{% url 'home' %}" style="color:#1e3a8a; font-weight:800; font-size:28px;">Rentora</a></h1>
+      <p style="color:#64748b; font-size:12px;">Smart Real-Estate Rental Management</p>
     </div>
-    <div id="quickinfo" class="fl_right">
-      <ul class="nospace inline">
-        <li><strong>Akarsha:</strong><br>
-          2015010</li>
-        <li><strong>Kushagra:</strong><br>
-          2015049</li>
-      </ul>
-    </div>
-    <!-- ################################################################################################ -->
   </header>
   <nav id="mainav" class="hoc clear"> 
-    <!-- ################################################################################################ -->
     <ul class="clear">
-      <li class="active"><a href="{% url 'home' %}">Home</a></li>
-      <li class="active"><a href="{% url 'home' %}">Contact Us</a></li>
-      <!-- <li><a href="#">P</a></li> -->
-      
+      <li><a href="{% url 'home' %}">Home</a></li>
+      <li class="active"><a href="{% url 'dashboard' %}">Visitor Search Console</a></li>
     </ul>
-    <!-- ################################################################################################ -->
   </nav>
 </div>
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<div class="wrapper bgded overlay" style="background-image:url('../images/demo/backgrounds/01.png');">
-  <section id="breadcrumb" class="hoc clear"> 
-    <!-- ################################################################################################ -->
-<!--     <ul>
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Lorem</a></li>
-      <li><a href="#">Ipsum</a></li>
-      <li><a href="#">Dolor</a></li>
-    </ul> -->
-    <!-- ################################################################################################ -->
-    <h6 class="heading">Welcome {{ request.user }}</h6>
-    <!-- ################################################################################################ -->
+
+<!-- Breadcrumb / Welcome banner -->
+<div class="wrapper bgded overlay" style="background-image:url('{% static 'images/hero_banner.jpg' %}'); background-size:cover; background-position:center; padding:30px 0;">
+  <section id="breadcrumb" class="hoc clear" style="color:#fff;"> 
+    <h3 class="heading" style="margin:0; font-size:22px; font-weight:700;">Find Your Next Rental Home</h3>
+    <p style="margin:4px 0 0 0; opacity:0.9; font-size:13px;">Welcome back, <strong>{{ request.user.username }}</strong> &bull; Zero Brokerage &bull; Direct Owner Verification</p>
   </section>
 </div>
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
+
+<!-- Main Body -->
 <div class="wrapper row3">
-  <main class="hoc container clear"> 
-    <!-- main body -->
-    <!-- ################################################################################################ -->
+  <main class="hoc container clear" style="max-width:1200px; padding:30px 15px;"> 
+    
+    <!-- LEFT SIDEBAR: SMART FILTER CONSOLE -->
     <div class="sidebar one_third first"> 
-      <!-- ################################################################################################ -->
-<!--       <h6>Lorem ipsum dolor</h6> -->
-      <!-- <nav class="sdb_holder"> -->
-        <!-- <ul> -->
-          <!-- <li><a href='#'>Add propery</a></li> -->
-         <!--  <li><a href="#">View All tenants</a></li>
-          <li><a href="#">Rent to get</a>
-          </li>
-          <li><a href="#"></a>
-            <ul>
-              <li><a href="#">Navigation - Level 2</a></li>
-              <li><a href="#">Navigation - Level 2</a>
-                <ul>
-                  <li><a href="#">Navigation - Level 3</a></li>
-                  <li><a href="#">Navigation - Level 3</a></li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-          <li><a href="#">Navigation - Level 1</a></li>
-        </ul> -->
-      <!-- </nav> -->
-      <form action = "#" method = "post" >
-        {% csrf_token %}
-        <label class="sr-o" for="sort"><b>SORT BY:</b></label>
-       <!--  <input type='radio' name='sortBy' value='1'><label for="1"> By Distance</label>
-        --> <input type='radio' name='sortBy' value='2'><label>By Rating:</label>
-        <input type='radio' name='sortBy' value='3' checked="True"><label>By Price:</label><br>
-        <label class="sr-o" for="query"><b>Choose one of the following queries:</b></label>
-        <input type='radio' name='query' value='1'><label> More than x avg-rating</label>
-        <input type='radio' name='query' value='2'><label> Atleast x 5-star ratings</label>
-        <!-- <input type='radio' name='query' value='3'><label> Distance of vicinity </label>
-         --><input type='radio' name='query' value='4' checked="True"><label> Maximum rent</label><br>
-        <input type='text' name='val' placeholder="Enter value" required>
-        <br>
-        <input type='submit' class="btn" value='search'><br>
-      </form>
-        <br><br><br>
-      <div class="sdb_holder">
-        <h6>My Profile</h6>
-        <address>
-        <p>{{ curr_visitor.profile }}</p>
-        </address>
-      </div>
-      <!-- ################################################################################################ -->
-    </div>
-    <!-- ################################################################################################ -->
-    <!-- ################################################################################################ -->
-    <div class="content two_third"> 
-      <!-- ################################################################################################ -->
-      <h1>Properties</h1>
-    
-      {% for i in properties %}
-          <a href="{% url 'prop' i.id %}"> <b>Property</b>{{ i.id }}<br></a>
-          <b>Description: </b> {{ i.description }}<br> 
-          <b>Location: </b> {{ i.location }} <br>
-          <b>Price: </b> {{ i.price }}<br>
-          <b>Number of views: </b> {{ i.num_views }}<br><br><br>
-      {% endfor %}
-
-      <div class="pagination">
-        <!-- <span class="step-links"> -->
-        <div class="one_third" first>
+      <div class="filter-panel">
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <h4 style="margin:0; font-size:16px; font-weight:800; color:#1e293b;">
+            <i class="fa fa-sliders" style="color:#2563eb;"></i> Filters
+          </h4>
+          <span style="font-size:11px; background:#e2e8f0; padding:2px 8px; border-radius:10px; color:#475569; font-weight:700;">
+            {{ total_matches }} Available
+          </span>
         </div>
-        <div class="one_third">
-            {% if properties.has_previous %}
-                <a href="?page={{ properties.previous_page_number }}" class="btn">previous</a>
-            {% endif %}
 
-            <!-- <span class="current"> -->
-                Page {{ properties.number }} of {{ properties.paginator.num_pages }}.
-            <!-- </span> -->
-
-            {% if properties.has_next %}
-                <a href="?page={{ properties.next_page_number }}" class="btn">next</a>
-            {% endif %}
+        <!-- QUICK PRESETS -->
+        <div class="filter-group">
+          <div class="filter-title"><i class="fa fa-bolt" style="color:#eab308;"></i> Quick Tenant Presets</div>
+          <div class="preset-bar">
+            <button type="button" class="btn-preset" onclick="applyPreset('student')">
+              <span>🎓 3 College Students</span>
+              <small>Tanakpur &bull; ≤₹14k</small>
+            </button>
+            <button type="button" class="btn-preset" onclick="applyPreset('pro')">
+              <span>💼 Working Professional</span>
+              <small>Studio &bull; Furnished</small>
+            </button>
+            <button type="button" class="btn-preset" onclick="applyPreset('family')">
+              <span>👨‍👩‍👧‍👦 Family of 4</span>
+              <small>2-3 BHK &bull; Parking</small>
+            </button>
           </div>
-        <!-- </span> -->
-      </div>
-      <br><br><br><br><br>
-      <h1>My Rented Properties</h1>
-    
-      {% for i in myprop %}
-          <a href="{% url 'prop' i.id %}"> <b>Property</b>{{ i.id }}<br></a>
-          <b>Description: </b> {{ i.description }}<br> 
-          <b>Location: </b> {{ i.location }} <br>
-          <b>Price: </b> {{ i.price }}<br>
-          <b>Number of views: </b> {{ i.num_views }}<br><br><br>
-      {% endfor %}
-
-      <!-- <div class="pagination"> -->
-        <!-- <span class="step-links"> -->
-       <!--  <div class="one_third" first>
         </div>
-        <div class="one_third">
-            {% if myprop.has_previous %}
-                <a href="?page={{ myprop.previous_page_number }}" class="btn">previous</a>
-            {% endif %}
 
-                Page {{ myprop.number }} of {{ myprop.paginator.num_pages }}.
-            
-            {% if myprop.has_next %}
-                <a href="?page={{ myprop.next_page_number }}" class="btn">next</a>
-            {% endif %}
-          </div>•••••••
-        --> <!-- </span> -->
-      <!-- </div> -->
+        <!-- MAIN FILTER FORM -->
+        <form id="filterForm" action="{% url 'dashboard' %}" method="get">
+          
+          <!-- 1. Search Location & Radius -->
+          <div class="filter-group">
+            <div class="filter-title"><i class="fa fa-map-marker" style="color:#ef4444;"></i> 1. Location / Town</div>
+            <input type="text" id="filterLoc" name="location" class="filter-input" value="{{ filter_params.location }}" placeholder="e.g. Tanakpur, Dehradun, Delhi">
+          </div>
+
+          <!-- 2. Property Type -->
+          <div class="filter-group">
+            <div class="filter-title"><i class="fa fa-building-o"></i> 2. Property Type</div>
+            <select id="filterType" name="property_type" class="filter-input">
+              <option value="all" {% if not filter_params.property_type or filter_params.property_type == 'all' %}selected{% endif %}>All Property Types</option>
+              <option value="Apartment" {% if filter_params.property_type == 'Apartment' %}selected{% endif %}>Apartment / Flat</option>
+              <option value="Independent House" {% if filter_params.property_type == 'Independent House' %}selected{% endif %}>Independent House</option>
+              <option value="Villa" {% if filter_params.property_type == 'Villa' %}selected{% endif %}>Villa / Penthouse</option>
+              <option value="Studio" {% if filter_params.property_type == 'Studio' %}selected{% endif %}>Studio Apartment</option>
+              <option value="Commercial" {% if filter_params.property_type == 'Commercial' %}selected{% endif %}>Commercial / Office</option>
+            </select>
+          </div>
+
+          <!-- 3. BHK Config -->
+          <div class="filter-group">
+            <div class="filter-title"><i class="fa fa-bed"></i> 3. BHK Configuration</div>
+            <div class="bhk-pill-group">
+              <div>
+                <input type="radio" id="bhk_all" name="bhk" value="all" class="bhk-radio" {% if not filter_params.bhk or filter_params.bhk == 'all' %}checked{% endif %}>
+                <label for="bhk_all" class="bhk-label">Any</label>
+              </div>
+              <div>
+                <input type="radio" id="bhk_1" name="bhk" value="1" class="bhk-radio" {% if filter_params.bhk == '1' %}checked{% endif %}>
+                <label for="bhk_1" class="bhk-label">1 BHK</label>
+              </div>
+              <div>
+                <input type="radio" id="bhk_2" name="bhk" value="2" class="bhk-radio" {% if filter_params.bhk == '2' %}checked{% endif %}>
+                <label for="bhk_2" class="bhk-label">2 BHK</label>
+              </div>
+              <div>
+                <input type="radio" id="bhk_3" name="bhk" value="3" class="bhk-radio" {% if filter_params.bhk == '3' %}checked{% endif %}>
+                <label for="bhk_3" class="bhk-label">3 BHK</label>
+              </div>
+              <div>
+                <input type="radio" id="bhk_4" name="bhk" value="4+" class="bhk-radio" {% if filter_params.bhk == '4+' %}checked{% endif %}>
+                <label for="bhk_4" class="bhk-label">4+ BHK</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Rent Range Slider -->
+          <div class="filter-group">
+            <div class="filter-title"><i class="fa fa-money" style="color:#10b981;"></i> 4. Monthly Budget (₹)</div>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <input type="number" id="filterMinPrice" name="min_price" class="filter-input" value="{{ filter_params.min_price }}" placeholder="Min (₹)" min="0" step="500">
+              <span style="color:#94a3b8;">-</span>
+              <input type="number" id="filterMaxPrice" name="max_price" class="filter-input" value="{{ filter_params.max_price }}" placeholder="Max (₹)" min="0" step="500">
+            </div>
+            <div style="margin-top:8px;">
+              <input type="range" id="priceRangeSlider" min="5000" max="45000" step="1000" value="{{ filter_params.max_price|default:35000 }}" style="width:100%; cursor:pointer;" oninput="document.getElementById('filterMaxPrice').value = this.value;">
+              <div style="display:flex; justify-content:space-between; font-size:11px; color:#94a3b8; margin-top:2px;">
+                <span>₹5,000</span>
+                <span>Max Slider: ₹45,000+</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. Furnishing -->
+          <div class="filter-group">
+            <div class="filter-title"><i class="fa fa-couch"></i> 5. Furnishing</div>
+            <select id="filterFurnishing" name="furnishing" class="filter-input">
+              <option value="all" {% if not filter_params.furnishing or filter_params.furnishing == 'all' %}selected{% endif %}>Any Furnishing</option>
+              <option value="Fully-Furnished" {% if filter_params.furnishing == 'Fully-Furnished' %}selected{% endif %}>Fully-Furnished</option>
+              <option value="Semi-Furnished" {% if filter_params.furnishing == 'Semi-Furnished' %}selected{% endif %}>Semi-Furnished</option>
+              <option value="Unfurnished" {% if filter_params.furnishing == 'Unfurnished' %}selected{% endif %}>Unfurnished</option>
+            </select>
+          </div>
+
+          <!-- 6. Preferred Tenant -->
+          <div class="filter-group">
+            <div class="filter-title"><i class="fa fa-users"></i> 6. Preferred Tenant</div>
+            <select id="filterTenant" name="preferred_tenant" class="filter-input">
+              <option value="all" {% if not filter_params.preferred_tenant or filter_params.preferred_tenant == 'all' %}selected{% endif %}>Any Tenant</option>
+              <option value="Bachelors / Students" {% if filter_params.preferred_tenant == 'Bachelors / Students' %}selected{% endif %}>Bachelors / Students</option>
+              <option value="Family Only" {% if filter_params.preferred_tenant == 'Family Only' %}selected{% endif %}>Family Only</option>
+              <option value="Single Professional" {% if filter_params.preferred_tenant == 'Single Professional' %}selected{% endif %}>Single Professional</option>
+            </select>
+          </div>
+
+          <!-- 7. Parking -->
+          <div class="filter-group">
+            <div class="filter-title"><i class="fa fa-car"></i> 7. Parking</div>
+            <select id="filterParking" name="parking" class="filter-input">
+              <option value="all" {% if not filter_params.parking or filter_params.parking == 'all' %}selected{% endif %}>Any Parking</option>
+              <option value="Car" {% if filter_params.parking == 'Car' %}selected{% endif %}>Dedicated Car Parking</option>
+              <option value="Two-Wheeler" {% if filter_params.parking == 'Two-Wheeler' %}selected{% endif %}>Two-Wheeler Only</option>
+            </select>
+          </div>
+
+          <!-- 8. Amenities Checkboxes -->
+          <div class="filter-group">
+            <div class="filter-title"><i class="fa fa-check-square-o"></i> 8. Amenities to Check</div>
+            <label class="amenity-checkbox-item">
+              <input type="checkbox" name="amenity" value="Wi-Fi" {% if "Wi-Fi" in filter_params.amenities %}checked{% endif %}>
+              <span>High-speed Wi-Fi</span>
+            </label>
+            <label class="amenity-checkbox-item">
+              <input type="checkbox" name="amenity" value="Water" {% if "Water" in filter_params.amenities %}checked{% endif %}>
+              <span>24x7 Water Supply</span>
+            </label>
+            <label class="amenity-checkbox-item">
+              <input type="checkbox" name="amenity" value="Power" {% if "Power" in filter_params.amenities %}checked{% endif %}>
+              <span>Power Backup (Inverter)</span>
+            </label>
+            <label class="amenity-checkbox-item">
+              <input type="checkbox" name="amenity" value="Security" {% if "Security" in filter_params.amenities %}checked{% endif %}>
+              <span>Security / CCTV / Gated</span>
+            </label>
+            <label class="amenity-checkbox-item">
+              <input type="checkbox" name="amenity" value="Lift" {% if "Lift" in filter_params.amenities %}checked{% endif %}>
+              <span>Lift / Elevator</span>
+            </label>
+          </div>
+
+          <!-- 9. Sorting Order -->
+          <div class="filter-group">
+            <div class="filter-title"><i class="fa fa-sort-amount-asc"></i> 9. Best Sorting Order</div>
+            <select id="filterSort" name="sort_by" class="filter-input">
+              <option value="newest" {% if filter_params.sort_by == 'newest' %}selected{% endif %}>Recently Added / Newest</option>
+              <option value="price_asc" {% if filter_params.sort_by == 'price_asc' or filter_params.sort_by == '3' %}selected{% endif %}>Rent: Low to High</option>
+              <option value="price_desc" {% if filter_params.sort_by == 'price_desc' %}selected{% endif %}>Rent: High to Low</option>
+              <option value="rating_desc" {% if filter_params.sort_by == 'rating_desc' or filter_params.sort_by == '1' %}selected{% endif %}>Highest Rated (Stars)</option>
+            </select>
+          </div>
+
+          <!-- ACTION BUTTONS -->
+          <button type="submit" class="btn-apply-filters">
+            <i class="fa fa-filter"></i> Apply Selected Filters
+          </button>
+          <a href="{% url 'dashboard' %}" class="btn-reset-filters">
+            <i class="fa fa-refresh"></i> Reset All Filters
+          </a>
+
+        </form>
+
+      </div>
     </div>
-    <!-- ################################################################################################ -->
-    <!-- / main body -->
+
+    <!-- RIGHT CONTENT: PROPERTY CARDS GRID -->
+    <div class="content two_third"> 
+
+      <!-- Top Result Bar -->
+      <div style="background:#ffffff; padding:15px 20px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div>
+          <h2 style="margin:0; font-size:18px; font-weight:800; color:#1e293b;">
+            <i class="fa fa-home" style="color:#2563eb;"></i> Verified Rental Homes
+          </h2>
+          <span style="font-size:12px; color:#64748b;">
+            Showing <strong>{{ properties|length }}</strong> of <strong>{{ total_matches }}</strong> matching properties
+          </span>
+        </div>
+        <div>
+          {% if filter_params.location or filter_params.property_type or filter_params.bhk or filter_params.max_price %}
+            <span style="font-size:11px; background:#eff6ff; color:#1d4ed8; padding:5px 10px; border-radius:6px; font-weight:700;">
+              Filtered active &bull; <a href="{% url 'dashboard' %}" style="color:#2563eb; text-decoration:underline;">Clear</a>
+            </span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Property Cards Grid -->
+      <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:20px; margin-bottom:30px;">
+      {% for i in properties %}
+        <div class="prop-card">
+          <div style="height:175px; overflow:hidden; position:relative; background:#f1f5f9;">
+            <img src="{{ i.display_image_url }}" alt="{{ i.title }}" style="width:100%; height:100%; object-fit:cover;">
+            <span class="prop-badge-type">{{ i.property_type|default:"Apartment" }}</span>
+            <span class="prop-badge-price">₹ {{ i.price }}/mo</span>
+          </div>
+          
+          <div style="padding:16px; flex-grow:1; display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+              <h4 style="margin:0 0 6px 0; font-size:15px; font-weight:700; color:#0f172a; line-height:1.3;">
+                {{ i.title|default:"Rental Property" }}
+              </h4>
+              <p style="color:#64748b; font-size:12px; margin-bottom:8px;">
+                <i class="fa fa-map-marker" style="color:#ef4444;"></i> {{ i.location }}
+              </p>
+
+              <!-- Attribute Badges -->
+              <div style="margin-bottom:10px;">
+                <span class="tag-pill">{{ i.bedrooms|default:1 }} BHK</span>
+                <span class="tag-pill tag-furnish">{{ i.furnishing|default:"Semi-Furnished" }}</span>
+                <span class="tag-pill tag-tenant">{{ i.preferred_tenant|default:"Any Tenant" }}</span>
+                {% if i.parking %}
+                  <span class="tag-pill tag-parking"><i class="fa fa-car"></i> {{ i.parking }}</span>
+                {% endif %}
+              </div>
+
+              <!-- Amenities pill -->
+              {% if i.amenities %}
+              <p style="font-size:11px; color:#64748b; margin-bottom:10px; line-height:1.4;">
+                <i class="fa fa-check-circle" style="color:#10b981;"></i> {{ i.amenities }}
+              </p>
+              {% endif %}
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #f1f5f9; padding-top:10px; margin-top:8px;">
+              <span style="font-size:12px; color:#f59e0b; font-weight:700;">
+                <i class="fa fa-star"></i> {{ i.avg_rating|default:5 }} / 5
+              </span>
+              <a href="{% url 'prop' i.id %}" style="padding:6px 14px; font-size:12px; border-radius:6px; background:#2563eb; color:#ffffff; font-weight:700; text-decoration:none; display:inline-block;">
+                View Details &rsaquo;
+              </a>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div style="grid-column: 1 / -1; background:#ffffff; border-radius:12px; padding:40px 20px; text-align:center; border:1px dashed #cbd5e1;">
+          <i class="fa fa-search" style="font-size:36px; color:#94a3b8; margin-bottom:12px; display:block;"></i>
+          <h4 style="margin:0 0 6px 0; color:#334155; font-size:16px; font-weight:700;">No properties match your filter criteria</h4>
+          <p style="color:#64748b; font-size:13px; margin-bottom:16px;">Try adjusting the budget slider, clearing amenities, or picking a broader location.</p>
+          <a href="{% url 'dashboard' %}" class="btn" style="background:#2563eb; color:#fff; padding:7px 18px; border-radius:6px; font-size:13px; font-weight:600; text-decoration:none;">
+            Reset All Filters
+          </a>
+        </div>
+      {% endfor %}
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination" style="margin-bottom:35px; text-align:center;">
+        {% if properties.has_previous %}
+            <a href="?page={{ properties.previous_page_number }}" class="btn" style="padding:6px 14px; border-radius:6px;">&laquo; Previous</a>
+        {% endif %}
+        <span style="padding:0 12px; font-size:13px; color:#475569; font-weight:600;">Page {{ properties.number }} of {{ properties.paginator.num_pages }}</span>
+        {% if properties.has_next %}
+            <a href="?page={{ properties.next_page_number }}" class="btn" style="padding:6px 14px; border-radius:6px;">Next &raquo;</a>
+        {% endif %}
+      </div>
+
+      <!-- My Rented Properties section -->
+      <div style="border-bottom:2px solid #e2e8f0; padding-bottom:10px; margin-bottom:20px; margin-top:40px;">
+        <h3 style="margin:0; font-size:18px; color:#1e293b; font-weight:800;">
+          <i class="fa fa-key" style="color:#10b981;"></i> My Rented Accommodations
+        </h3>
+      </div>
+    
+      {% if myprop %}
+      <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap:20px; margin-bottom:30px;">
+      {% for i in myprop %}
+        <div style="background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.06); border:1px solid #e2e8f0; border-top:3px solid #10b981;">
+          <div style="height:140px; overflow:hidden; position:relative; background:#f1f5f9;">
+            <img src="{{ i.display_image_url }}" alt="{{ i.title }}" style="width:100%; height:100%; object-fit:cover;">
+            <span style="position:absolute; top:8px; right:8px; background:#10b981; color:#fff; padding:4px 9px; border-radius:4px; font-size:11px; font-weight:700;">
+              Rented by you
+            </span>
+          </div>
+          <div style="padding:15px;">
+            <h5 style="margin:0 0 5px 0; font-size:15px; font-weight:700; color:#1e293b;">{{ i.title|default:"Rental Property" }}</h5>
+            <p style="color:#64748b; font-size:12px; margin-bottom:4px;"><i class="fa fa-map-marker" style="color:#ef4444;"></i> {{ i.location }} &bull; Rent: ₹{{ i.price }}/mo</p>
+            <a href="{% url 'prop' i.id %}" class="btn" style="padding:4px 12px; font-size:11px; margin-top:6px; display:inline-block; border-radius:4px;">View Details &rsaquo;</a>
+          </div>
+        </div>
+      {% endfor %}
+      </div>
+      {% else %}
+        <p style="color:#94a3b8; font-style:italic; font-size:13px;">You have not rented any properties yet.</p>
+      {% endif %}
+
+    </div>
+    
     <div class="clear"></div>
   </main>
 </div>
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<!-- ################################################################################################ -->
-<div class="wrapper row4 bgded overlay" style="background-image:url('images/demo/backgrounds/03.png');">
-  <footer id="footer" class="hoc clear"> 
-    <!-- ################################################################################################ -->
-    <div class="center btmspace-50">
-      <h2 class="heading">Rent It Out</h2>
-      <nav>
-        <ul class="nospace inline pushright uppercase">
-          <li><a href="{% url 'home' %}"><i class="fa fa-lg fa-home"></i></a></li>
-          <li><a href="{% url 'home' %}">About</a></li>
-          <li><a href="{% url 'home' %}">Contact</a></li>
-          </ul>
-      </nav>
-    </div>
+
+<!-- Footer -->
+<div class="wrapper row4 bgded overlay" style="background:#0f172a; padding:25px 0;">
+  <footer id="footer" class="hoc clear center"> 
+    <h3 style="margin:0 0 8px 0; color:#fff; font-size:20px; font-weight:800;">Rentora</h3>
+    <p style="color:#94a3b8; font-size:13px; margin:0;">An Advanced Real-Estate Rental Management System &bull; Dr. APJ Abdul Kalam IT Tanakpur</p>
+  </footer>
 </div>
-    <a id="backtotop" href="#top"><i class="fa fa-chevron-up"></i></a>
-<!-- JAVASCRIPTS -->
-<!-- <script src="{% static 'js/jquery.min.js' %}"></script>
-<script src="{% static 'js/jquery.backtotop.js' %}"></script>
-<script src="{% static 'js/jquery.mobilemenu.js' %}"></script>
-<script src="{% static 'js/jquery.flexslider-min.js' %}"></script>
- -->
-<script src="static/js/jquery.min.js"></script>
-<script src="static/js/jquery.backtotop.js"></script>
-<script src="static/js/jquery.mobilemenu.js"></script>
-<script src="static/js/jquery.flexslider-min.js"></script>
+
+<!-- JAVASCRIPTS FOR PRESET ACTIONS -->
+<script>
+function applyPreset(type) {
+  var loc = document.getElementById('filterLoc');
+  var ptype = document.getElementById('filterType');
+  var minP = document.getElementById('filterMinPrice');
+  var maxP = document.getElementById('filterMaxPrice');
+  var slider = document.getElementById('priceRangeSlider');
+  var furn = document.getElementById('filterFurnishing');
+  var tenant = document.getElementById('filterTenant');
+  var parking = document.getElementById('filterParking');
+  var sort = document.getElementById('filterSort');
+
+  // Uncheck all amenities first
+  var ams = document.querySelectorAll('input[name="amenity"]');
+  ams.forEach(function(a) { a.checked = false; });
+
+  if (type === 'student') {
+    // 🎓 College Students Preset
+    loc.value = "Tanakpur";
+    ptype.value = "all";
+    document.getElementById('bhk_2').checked = true;
+    minP.value = "6000";
+    maxP.value = "14000";
+    slider.value = 14000;
+    furn.value = "Semi-Furnished";
+    tenant.value = "Bachelors / Students";
+    parking.value = "Two-Wheeler";
+    sort.value = "price_asc";
+    // Check Wi-Fi & Water
+    document.querySelector('input[value="Wi-Fi"]').checked = true;
+    document.querySelector('input[value="Water"]').checked = true;
+  } else if (type === 'pro') {
+    // 💼 Working Professional Preset
+    loc.value = "Dehradun";
+    ptype.value = "Studio";
+    document.getElementById('bhk_1').checked = true;
+    minP.value = "10000";
+    maxP.value = "18000";
+    slider.value = 18000;
+    furn.value = "Fully-Furnished";
+    tenant.value = "Single Professional";
+    parking.value = "all";
+    sort.value = "newest";
+    document.querySelector('input[value="Wi-Fi"]').checked = true;
+    document.querySelector('input[value="Power"]').checked = true;
+  } else if (type === 'family') {
+    // 👨‍👩‍👧‍👦 Family of 4 Preset
+    loc.value = "Delhi";
+    ptype.value = "Apartment";
+    document.getElementById('bhk_3').checked = true;
+    minP.value = "18000";
+    maxP.value = "35000";
+    slider.value = 35000;
+    furn.value = "all";
+    tenant.value = "Family Only";
+    parking.value = "Car";
+    sort.value = "price_asc";
+    document.querySelector('input[value="Water"]').checked = true;
+    document.querySelector('input[value="Security"]').checked = true;
+  }
+
+  // Submit the form immediately
+  document.getElementById('filterForm').submit();
+}
+</script>
 
 </body>
 </html>

@@ -1,182 +1,383 @@
 {% load static %}
 <!DOCTYPE html>
-<!--
-Template Name: Dodmond
-Author: <a href="http://www.os-templates.com/">OS Templates</a>
-Author URI: http://www.os-templates.com/
-Licence: Free to use under our free template licence terms
-Licence URI: http://www.os-templates.com/template-terms
--->
-<html lang="">
+<html lang="en">
 <head>
-<title>Rent it out | Visitor | View Property</title>
+<title>Rentora | {{ prop.title|default:"Property Details" }}</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<!-- <link href="../layout/styles/layout.css" rel="stylesheet" type="text/css" media="all"> -->
 <link href="{% static 'css/layout.css' %}" rel="stylesheet" type="text/css" media="all">
-<link href="{% static 'css/font-awesome.css' %}" rel="stylesheet" type="text/css" media="all">
 <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" media="all">
-<link href="{% static 'css/custom-flexslider.css' %}" rel="stylesheet" type="text/css" media="all">
 
+<style>
+    .prop-detail-container {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        padding: 30px;
+        margin-top: 20px;
+        margin-bottom: 30px;
+    }
+    .prop-img-box {
+        width: 100%;
+        max-height: 480px;
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+        margin-bottom: 25px;
+        background: #f1f5f9;
+        text-align: center;
+    }
+    .prop-img-box img {
+        width: 100%;
+        height: 450px;
+        object-fit: cover;
+        display: block;
+    }
+    .prop-header-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #e2e8f0;
+        padding-bottom: 15px;
+    }
+    .prop-title {
+        font-size: 26px;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0 0 6px 0;
+    }
+    .prop-loc {
+        font-size: 16px;
+        color: #64748b;
+    }
+    .price-badge {
+        background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%);
+        color: #ffffff;
+        font-size: 22px;
+        font-weight: 700;
+        padding: 8px 20px;
+        border-radius: 8px;
+        display: inline-block;
+    }
+    .specs-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin: 20px 0;
+        background: #f8fafc;
+        padding: 18px 20px;
+        border-radius: 10px;
+    }
+    .spec-item {
+        flex: 1 1 120px;
+        text-align: center;
+        border-right: 1px solid #e2e8f0;
+    }
+    .spec-item:last-child {
+        border-right: none;
+    }
+    .spec-item i {
+        font-size: 20px;
+        color: #2b5876;
+        display: block;
+        margin-bottom: 4px;
+    }
+    .spec-item .spec-label {
+        font-size: 12px;
+        color: #64748b;
+        text-transform: uppercase;
+    }
+    .spec-item .spec-val {
+        font-size: 15px;
+        font-weight: 700;
+        color: #1e293b;
+    }
+    .desc-box {
+        margin: 25px 0;
+        line-height: 1.7;
+        color: #334155;
+        font-size: 15px;
+    }
+    .action-bar {
+        margin: 25px 0;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+    .btn-rent-now {
+        background: #10b981;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 700;
+        padding: 12px 28px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .btn-rent-now:hover {
+        background: #059669;
+        color: #fff;
+    }
+    .badge-rented {
+        background: #ef4444;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 14px;
+        display: inline-block;
+    }
+    .owner-info-card {
+        background: #f1f5f9;
+        padding: 15px 20px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        font-size: 14px;
+    }
+    .comment-card {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 12px;
+        border-left: 4px solid #2b5876;
+    }
+</style>
 </head>
 <body id="top">
+
+<!-- Top bar -->
 <div class="wrapper row0">
   <div id="topbar" class="hoc clear"> 
     <div class="fl_left">
       <ul>
-        <li><i class="fa fa-phone"></i> +91 (123) 456 7890</li>
-        <li><i class="fa fa-envelope-o"></i> kushagra@iiid.ac.in</li>
+        <li><i class="fa fa-phone"></i> +91 (0124) 456 7890</li>
+        <li><i class="fa fa-envelope-o"></i> fuzimarcus@gmail.com</li>
       </ul>
     </div>
     <div class="fl_right">
       <ul>
-        <li><a href="{% url 'home' %}"><i class="fa fa-lg fa-home"></i></a></li>
-        <li><a href="{% url 'login' %}">Login</a></li>
-        <li><a href="{% url 'register' %}">Register as owner</a></li>
-        <li><a href="{% url 'registerVis' %}">Register as visitor</a></li>
-        <li><a href="{% url 'logout' %}">Logout</a></li>
+        <li><a href="{% url 'home' %}"><i class="fa fa-lg fa-home"></i> Home</a></li>
+        {% if user.is_authenticated %}
+            {% if user.is_owner %}
+                <li><a href="{% url 'ownerdashboard' %}"><i class="fa fa-dashboard"></i> Owner Dashboard</a></li>
+            {% else %}
+                <li><a href="{% url 'dashboard' %}"><i class="fa fa-dashboard"></i> Visitor Dashboard</a></li>
+            {% endif %}
+            <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> Logout ({{ user.username }})</a></li>
+        {% else %}
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'register' %}">Register as Owner</a></li>
+            <li><a href="{% url 'registerVis' %}">Register as Visitor</a></li>
+        {% endif %}
       </ul>
     </div>
   </div>
 </div>
+
+<!-- Header -->
 <div class="wrapper row1">
   <header id="header" class="hoc clear"> 
     <div id="logo" class="fl_left">
-      <h1><a href="{% url 'home' %}">RENT IT OUT</a></h1>
-      <p>We provide the best</p>
-    </div>
-    <div id="quickinfo" class="fl_right">
-      <ul class="nospace inline">
-        <li><strong>Akarsha:</strong><br>
-          +919971408507</li>
-        <li><strong>Kushagra:</strong><br>
-          +91627492233</li>
-      </ul>
+      <h1><a href="{% url 'home' %}">Rentora</a></h1>
+      <p>Find your next ideal home</p>
     </div>
   </header>
-   <nav id="mainav" class="hoc clear"> 
+  <nav id="mainav" class="hoc clear"> 
     <ul class="clear">
-      <li class="active"><a href="{% url 'home' %}">Home</a></li>
-      <li class="active"><a href="{% url 'home' %}">Contact Us</a></li>
+      <li><a href="{% url 'home' %}">Home</a></li>
+      {% if user.is_owner %}
+        <li><a href="{% url 'ownerdashboard' %}">My Listed Properties</a></li>
+        <li><a href="{% url 'addProperty' %}">+ Add New Property</a></li>
+      {% else %}
+        <li><a href="{% url 'dashboard' %}">Browse Properties</a></li>
+      {% endif %}
     </ul>
   </nav>
 </div>
 
-<div class="wrapper bgded overlay" style="background-image:url('../images/demo/backgrounds/01.png');">
-  <section id="breadcrumb" class="hoc clear"> 
-    <h6 class="heading">Hi {{ request.user }}</h6>
-  </section>
-</div>
+<!-- Main Content -->
 <div class="wrapper row3">
   <main class="hoc container clear"> 
-    <div class="content"> 
-      
-      <h1><i class="fa fa-lg fa-home"></i> Property on Rent</h1><br>
-      <p> <b>Owned by : </b>{{ prop.owner.owner_name}}
-      <p><b>Description :</b>{{ prop.description }}</p>
-      <p><b>Price: </b>{{ prop.price }}</p>
-      <p><b>Number of views: </b>{{ prop.num_views }}</p><br>
-      <img class="imgl borderedbox inspace-5" src="{% static 'images/house3.jpg' %}" alt="">
-       <br><br><br><br><br><br><br>
-       <br><br><br><br><br><br><br>
-       <br><br><br><br><br><br><br>
-       <br><br><br><br><br><br><br>
-       {% if disp_comment %}
-       <form action="#" method="post">
-       {% csrf_token %}
-       <div>
-            <input type="submit" name="rent" value="RENT THIS HOUSE" class="btn">
-        </div>
-        </form>
-        {% else %}
-          <form action="#" method="post">
-           {% csrf_token %}
-           <div>
-              <input type="submit" name="rent" value="RENT THIS HOUSE" class="btn">
-            </div>
-        </form>
+    
+    <div class="prop-detail-container">
 
-        {% endif %}
-       <br><br><br><br>
-       <div id="comments">
-        <h2>Comments</h2>
-        <ul>
-        {% for i in review %}
-          <li>
-            <article>
-              <header>
-                <figure class="avatar"><img src="{% static 'images/avatar.png' %}" alt=""></figure>
-                <address>
-                By : <b>{{ i.visitor_id.user.username }}</b>
-                </address>
-                </header>
-              <div class="comcont">
-                <p>{{ i.comment }}</p>
-                <p><b>Rating</b> : {{ i.rating }}
-                <hr>
-              </div>
-            </article>
-          </li>
-          {% endfor %}
-        </ul>
-       {% if disp_comment %}
-        <h2>Write A Comment</h2>
-        <form action="#" method="post">
-        {% csrf_token %}
-            <p><b> Comment as : {{ user.username}}</b></p>
-          <div class="block clear">
-            <label for="comment">Your Comment</label>
-            <textarea name="comment" id="comment" cols="25" rows="10"></textarea>
-            <!-- 
-            <input type="radio" name="rating" value="1">1
-            <input type="radio" name="rating" value="2" >2
-            <input type="radio" name="rating" value="3">3
-            <input type="radio" name="rating" value="4">4
-            <input type="radio" name="rating" value="5">5 -->
-            <!-- <input type="number" name="rating" size = "22" min="1" max="5" required>
-           --></div>
-          <div class="one_third first">
-            <label for="rating">Rating</label>
-            <input type="number" name="rating" value="" size="22" min="1" max="5" required>
-          </div><br></b><br><br><br><br>
-          <div>
-            <input type="submit" name="form" value="Submit Form">
-          </div>
-        </form>
-    {% endif %}
+      <!-- Property Large Image -->
+      <div class="prop-img-box">
+        <img src="{{ prop.display_image_url }}" alt="{{ prop.title|default:'Rental Property' }}">
       </div>
+
+      <!-- Header: Title & Price -->
+      <div class="prop-header-info">
+        <div>
+          <h1 class="prop-title">{{ prop.title|default:"Rental Property" }}</h1>
+          <div class="prop-loc"><i class="fa fa-map-marker" style="color:#ef4444;"></i> {{ prop.location }} &bull; <span style="color:#2b5876; font-weight:600;">{{ prop.property_type|default:"Apartment" }}</span></div>
+        </div>
+        <div>
+          <div class="price-badge">₹ {{ prop.price }} <small style="font-size:13px; font-weight:normal;">/ month</small></div>
+        </div>
+      </div>
+
+      <!-- Specifications bar -->
+      <div class="specs-grid">
+        <div class="spec-item">
+          <i class="fa fa-bed"></i>
+          <div class="spec-label">Bedrooms</div>
+          <div class="spec-val">{{ prop.bedrooms|default:1 }} BHK</div>
+        </div>
+        <div class="spec-item">
+          <i class="fa fa-bath"></i>
+          <div class="spec-label">Bathrooms</div>
+          <div class="spec-val">{{ prop.bathrooms|default:1 }} Bath</div>
+        </div>
+        <div class="spec-item">
+          <i class="fa fa-arrows-alt"></i>
+          <div class="spec-label">Built-up Area</div>
+          <div class="spec-val">{{ prop.area_sqft|default:1000 }} sq.ft.</div>
+        </div>
+        <div class="spec-item">
+          <i class="fa fa-eye"></i>
+          <div class="spec-label">Views</div>
+          <div class="spec-val">{{ prop.num_views }}</div>
+        </div>
+        <div class="spec-item">
+          <i class="fa fa-star" style="color:#f59e0b;"></i>
+          <div class="spec-label">Rating</div>
+          <div class="spec-val">{{ prop.avg_rating }} / 5</div>
+        </div>
+      </div>
+
+      <!-- Additional Rental Criteria (Furnishing, Tenant, Parking, Amenities) -->
+      <div style="background:#f8fafc; border-radius:10px; padding:18px 20px; margin-bottom:20px; border:1px solid #e2e8f0; display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px;">
+        <div>
+          <span style="font-size:11px; text-transform:uppercase; color:#64748b; font-weight:700; display:block; margin-bottom:3px;">Furnishing</span>
+          <span style="font-size:14px; font-weight:700; color:#166534;"><i class="fa fa-couch"></i> {{ prop.furnishing|default:"Semi-Furnished" }}</span>
+        </div>
+        <div>
+          <span style="font-size:11px; text-transform:uppercase; color:#64748b; font-weight:700; display:block; margin-bottom:3px;">Preferred Tenant</span>
+          <span style="font-size:14px; font-weight:700; color:#92400e;"><i class="fa fa-users"></i> {{ prop.preferred_tenant|default:"Any" }}</span>
+        </div>
+        <div>
+          <span style="font-size:11px; text-transform:uppercase; color:#64748b; font-weight:700; display:block; margin-bottom:3px;">Parking Facility</span>
+          <span style="font-size:14px; font-weight:700; color:#1e3a8a;"><i class="fa fa-car"></i> {{ prop.parking|default:"Two-Wheeler Only" }}</span>
+        </div>
+        <div>
+          <span style="font-size:11px; text-transform:uppercase; color:#64748b; font-weight:700; display:block; margin-bottom:3px;">Amenities</span>
+          <span style="font-size:13px; font-weight:600; color:#334155;"><i class="fa fa-check-circle" style="color:#10b981;"></i> {{ prop.amenities|default:"Wi-Fi, 24x7 Water" }}</span>
+        </div>
+      </div>
+
+      <!-- Owner & Contact Information -->
+      <div class="owner-info-card">
+        <i class="fa fa-user-circle" style="font-size:18px; color:#2b5876;"></i> 
+        <strong>Owner:</strong> {{ prop.owner.owner_name }} &nbsp;|&nbsp; 
+        <i class="fa fa-phone" style="font-size:16px; color:#10b981;"></i> 
+        <strong>Contact:</strong> {{ prop.contact_number|default:"+91 Available on Request" }}
+      </div>
+
+      <!-- Description -->
+      <h3 style="margin-top:20px; font-weight:700; color:#1e293b;">About This Property</h3>
+      <div class="desc-box">
+        <p>{{ prop.description }}</p>
+      </div>
+
+      <!-- Action: Rent button or Status -->
+      <div class="action-bar">
+        {% if is_rented %}
+            <div class="badge-rented"><i class="fa fa-lock"></i> Currently Rented</div>
+            {% if is_rented_by_me %}
+                <span style="color:#10b981; font-weight:700;"><i class="fa fa-check-circle"></i> You have rented this property.</span>
+            {% endif %}
+        {% else %}
+            {% if disp_comment %}
+                <form action="#" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" name="rent" value="1" class="btn-rent-now">
+                        <i class="fa fa-key"></i> Rent This Property Now
+                    </button>
+                </form>
+            {% else %}
+                <span style="color:#64748b; font-weight:600;"><i class="fa fa-info-circle"></i> You are viewing this property as the Owner.</span>
+            {% endif %}
+        {% endif %}
+      </div>
+
+      <hr style="margin:30px 0;">
+
+      <!-- Reviews & Comments Section -->
+      <div id="comments">
+        <h3 style="font-weight:700; color:#1e293b;"><i class="fa fa-comments-o"></i> Reviews & Feedback ({{ review.count }})</h3>
+        
+        {% if review %}
+            {% for r in review %}
+            <div class="comment-card">
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <strong><i class="fa fa-user"></i> {{ r.visitor_id.user.username }}</strong>
+                    <span style="color:#f59e0b; font-weight:700;">
+                        {% for star in "12345"|make_list %}
+                            {% if forloop.counter <= r.rating %}
+                                <i class="fa fa-star"></i>
+                            {% else %}
+                                <i class="fa fa-star-o"></i>
+                            {% endif %}
+                        {% endfor %}
+                        ({{ r.rating }}/5)
+                    </span>
+                </div>
+                <p style="margin:0; color:#475569;">{{ r.comment }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p style="color:#94a3b8; font-style:italic;">No reviews yet. Be the first to leave feedback!</p>
+        {% endif %}
+
+        {% if disp_comment %}
+        <div style="background:#f8fafc; border-radius:10px; padding:20px; margin-top:25px;">
+          <h4 style="font-weight:700; color:#1e293b; margin-top:0;">Write a Review</h4>
+          <form action="#" method="post">
+            {% csrf_token %}
+            <div class="form-group" style="margin-bottom:15px;">
+              <label for="comment" style="font-weight:600; color:#475569;">Your Review Comment</label>
+              <textarea name="comment" id="comment" rows="3" class="form-control" style="width:100%; border-radius:6px; padding:10px; border:1px solid #cbd5e1;" placeholder="Share your experience or inquiry about this property..." required></textarea>
+            </div>
+            <div class="form-group" style="margin-bottom:15px;">
+              <label for="rating" style="font-weight:600; color:#475569;">Rating (1 to 5 Stars)</label>
+              <select name="rating" id="rating" class="form-control" style="width:160px; padding:8px; border-radius:6px; border:1px solid #cbd5e1;">
+                <option value="5" selected>⭐⭐⭐⭐⭐ (5 Stars)</option>
+                <option value="4">⭐⭐⭐⭐ (4 Stars)</option>
+                <option value="3">⭐⭐⭐ (3 Stars)</option>
+                <option value="2">⭐⭐ (2 Stars)</option>
+                <option value="1">⭐ (1 Star)</option>
+              </select>
+            </div>
+            <button type="submit" name="form" value="1" class="btn" style="background:#2b5876; color:#fff; padding:8px 22px; border-radius:6px; font-weight:600;">
+                <i class="fa fa-paper-plane"></i> Submit Review
+            </button>
+          </form>
+        </div>
+        {% endif %}
+      </div>
+
     </div>
-   
-    <div class="clear"></div>
+
   </main>
 </div>
-<div class="wrapper row4 bgded overlay" style="background-image:url('images/demo/backgrounds/03.png');">
+
+<!-- Footer -->
+<div class="wrapper row4">
   <footer id="footer" class="hoc clear"> 
-    <div class="center btmspace-50">
-      <h2 class="heading">Rent It Out</h2>
-      <nav>
-        <ul class="nospace inline pushright uppercase">
-          <li><a href="{% url 'home' %}"><i class="fa fa-lg fa-home"></i></a></li>
-          <li><a href="{% url 'home' %}">About</a></li>
-          <li><a href="{% url 'home' %}">Contact</a></li>
-          </ul>
-      </nav>
+    <div class="one_half first">
+      <h6 class="heading">Rentora</h6>
+      <p>Online Rental Management System - Connecting landlords and tenants with trust and ease.</p>
     </div>
-</div>
-    <a id="backtotop" href="#top"><i class="fa fa-chevron-up"></i></a>
-<!-- JAVASCRIPTS -->
-<script src="{% static 'js/jquery.min.js' %}"></script>
-<script src="{% static 'js/jquery.backtotop.js' %}"></script>
-<script src="{% static 'js/jquery.mobilemenu.js' %}"></script>
-<script src="{% static 'js/jquery.flexslider-min.js' %}"></script>
-
-<!-- <script src="static/js/jquery.min.js"></script>
-<script src="static/js/jquery.backtotop.js"></script>
-<script src="static/js/jquery.mobilemenu.js"></script>
-<script src="static/js/jquery.flexslider-min.js"></script>
-
- -->
+    <div class="one_half">
+      <h6 class="heading">Contact Us</h6>
+      <p><i class="fa fa-envelope-o"></i> fuzimarcus@gmail.com<br><i class="fa fa-phone"></i> +91 (0124) 456 7890</p>
+    </div>
   </footer>
 </div>
+
 </body>
 </html>

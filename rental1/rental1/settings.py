@@ -25,7 +25,7 @@ SECRET_KEY = 'rtiqc))xdtctpbb0ij%s9mlhx*t8nqkys3wz%6j_)i5%co8awt'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -76,15 +76,8 @@ WSGI_APPLICATION = 'rental1.wsgi.application'
 
 DATABASES = {
     'default': {
-         'ENGINE': 'django.db.backends.mysql',
-         'NAME': 'dbmsrental',
-         'USERNAME': 'akarsha',
-         'PASSWORD': 'Gulgul!12',
-         'HOST': 'localhost',
-         'PORT': '',
-
-        #'ENGINE': 'django.db.backends.sqlite3',
-        #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -136,3 +129,9 @@ STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_root_rental")
 
 
 AUTH_USER_MODEL = 'rental_system.User'
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+LOGIN_URL = '/login'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+

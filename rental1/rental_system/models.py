@@ -11,14 +11,35 @@ class User(AbstractUser):
 
 class Property(models.Model):
 	id = models.AutoField(primary_key = True) 
-	description = models.TextField(default = '',blank = False)
+	title = models.CharField(max_length = 120, default = '', blank = True)
+	property_type = models.CharField(max_length = 50, default = 'Apartment', blank = True)
+	description = models.TextField(default = '', blank = False)
 	price = models.IntegerField(blank = False)
-	location = models.CharField(max_length = 50,blank = False,null = False) 
+	location = models.CharField(max_length = 50, blank = False, null = False) 
+	bedrooms = models.IntegerField(default = 2, blank = True)
+	bathrooms = models.IntegerField(default = 1, blank = True)
+	area_sqft = models.IntegerField(default = 1000, blank = True)
+	contact_number = models.CharField(max_length = 20, default = '', blank = True)
+	furnishing = models.CharField(max_length = 40, default = 'Semi-Furnished', blank = True)
+	preferred_tenant = models.CharField(max_length = 40, default = 'Any', blank = True)
+	parking = models.CharField(max_length = 40, default = 'Two-Wheeler', blank = True)
+	amenities = models.CharField(max_length = 200, default = 'Wi-Fi, 24x7 Water', blank = True)
+	image = models.ImageField(upload_to = 'properties/', null = True, blank = True)
 	num_views = models.IntegerField(default=0)
 	avg_rating = models.IntegerField(default=0)
 	owner = models.ForeignKey('rental_system.Owner', on_delete=models.CASCADE, null = True)
+
 	def __str__(self):
-		return str(self.id)
+		return f"{self.title or 'Property #' + str(self.id)} ({self.location})"
+
+	@property
+	def display_image_url(self):
+		if self.image:
+			try:
+				return self.image.url
+			except Exception:
+				pass
+		return '/static/images/house1.jpg'
 
 class Visitor(models.Model):
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

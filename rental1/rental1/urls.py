@@ -14,6 +14,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from rental_system import views 
 
@@ -21,14 +23,15 @@ from rental_system import views
 urlpatterns = [
     url(r'^admin/',               admin.site.urls                     ),
     url(r'^$',                    views.home,             name="home"),
-    url(r'^login$',               views.login_user,       name="login"),
-    url(r'^login/dashboard$',     views.dashboard,        name="dashboard"),
-    url(r'^login/ownerDashboard$',views.owner_dashboard,  name="ownerdashboard"),
-    url(r'^dashboard$',           views.dashboard,        name="dashboard"),
-    url(r'^register$',            views.register,         name="register"),
-    url(r'^registerVisitor$',     views.register_visitor, name="registerVis"),
-    url(r'^login/addProperty$',   views.add_property,     name="addProperty"),
-    url(r'^logout$',              views.logout_user,      name="logout"),
-    url(r'^viewProp/(?P<id>[0-9]+)$',views.view_prop,       name="prop"),
+    url(r'^login/?$',             views.login_user,       name="login"),
+    url(r'^login/dashboard/?$',   views.dashboard,        name="dashboard"),
+    url(r'^login/ownerDashboard/?$',views.owner_dashboard,name="ownerdashboard"),
+    url(r'^dashboard/?$',         views.dashboard,        name="dashboard"),
+    url(r'^register/?$',          views.register,         name="register"),
+    url(r'^registerVisitor/?$',   views.register_visitor, name="registerVis"),
+    url(r'^login/addProperty/?$', views.add_property,     name="addProperty"),
+    url(r'^addProperty/?$',       views.add_property,     name="addPropertyDirect"),
+    url(r'^logout/?$',            views.logout_user,      name="logout"),
+    url(r'^viewProp/(?P<id>[0-9]+)/?$',views.view_prop,   name="prop"),
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
