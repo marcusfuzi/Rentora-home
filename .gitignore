@@ -10,11 +10,15 @@ __pycache__/
 *$py.class
 *.so
 
-# Word Report Document (Excluded as requested)
+# Word Report Document & Generation Scripts
 *.docx
 Rentora_Minor_Project_Report.docx
 extracted_logos/
 static_root_rental/
+report_figures/
+build_full_report.py
+capture_all_screens.py
+*.bat
 
 # Scripts & temporary logs
 *.log
